@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Listar Vacas</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -39,7 +39,7 @@
                     <td>
                         <form action="/vacas/excluir/<%= vaca.id %>" method="POST"
                             onsubmit="return confirm('Tem certeza que deseja excluir esta vaca?');">
-                            <button type="submit">Excluir</button>
+                            <button type="submit" style="background-color: red;">Excluir</button>
                         </form>
                     </td>
                 </tr>

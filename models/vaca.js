@@ -21,7 +21,7 @@ const Vaca = sequelize.define('Vaca', {
         allowNull: false,
     },
 }, {
-    tableName: 'vacas',
+    tableName: 'vaca',
     timestamps: false,
 });
 

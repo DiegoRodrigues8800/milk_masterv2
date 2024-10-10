@@ -13,7 +13,7 @@ const Raca = sequelize.define('Raca', {
         allowNull: false,
     },
 }, {
-    tableName: 'racas',
+    tableName: 'raca',
     timestamps: false,
 });
 

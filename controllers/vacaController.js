@@ -39,6 +39,12 @@ exports.cadastrarVaca = async (req, res) => {
     }
     if (!racaId || isNaN(racaId)) {
         erros.push({ msg: 'Raça é obrigatória.' });
+    } else {
+        // Verifique se a raça existe
+        const racaExistente = await Raca.findByPk(racaId);
+        if (!racaExistente) {
+            erros.push({ msg: 'Raça selecionada não existe.' });
+        }
     }
 
     if (erros.length > 0) {
