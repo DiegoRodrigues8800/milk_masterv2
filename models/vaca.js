@@ -3,26 +3,30 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Vaca = sequelize.define('Vaca', {
-    id: {
+    idvaca: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
+        autoIncrement: true
     },
     nome: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
     },
     idade: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
     },
-    racaId: {
+    cod_raca: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
     },
+    cod_estado: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
 }, {
     tableName: 'vaca',
-    timestamps: false,
+    timestamps: false
 });
 
 module.exports = Vaca;

@@ -28,10 +28,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 const sequelize = require('./config/database');
 const Vaca = require('./models/vaca');
 const Raca = require('./models/raca');
+const Estado = require('./models/estado')
 
 // Definindo associações entre os modelos
-Vaca.belongsTo(Raca, { foreignKey: 'racaId' });
-Raca.hasMany(Vaca, { foreignKey: 'racaId' });
+Vaca.belongsTo(Raca, { foreignKey: 'cod_raca' });
+Raca.hasMany(Vaca, { foreignKey: 'cod_raca' });
+
+Vaca.belongsTo(Estado, { foreignKey: 'cod_estado' });
+Estado.hasMany(Vaca, { foreignKey: 'cod_estado' });
 
 // Sincronizando com o banco de dados
 sequelize.authenticate()

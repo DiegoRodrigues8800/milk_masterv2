@@ -1,9 +1,8 @@
-// models/raca.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Raca = sequelize.define('Raca', {
-    idraca: {
+const Estado = sequelize.define('Estado', {
+    idestado: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -13,8 +12,8 @@ const Raca = sequelize.define('Raca', {
         allowNull: false,
     },
 }, {
-    tableName: 'raca',
+    tableName: 'estado',
     timestamps: false,
 });
 
-module.exports = Raca;
+module.exports = Estado;

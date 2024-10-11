@@ -13,6 +13,6 @@ router.get('/cadastrar', VacaController.exibirFormularioCadastro);
 router.post('/cadastrar', VacaController.cadastrarVaca);
 
 // Rota para excluir uma vaca
-router.post('/excluir/:id', VacaController.excluirVaca);
+router.post('/excluir/:idvaca', VacaController.excluirVaca);
 
 module.exports = router;
