@@ -31,6 +31,14 @@ exports.exibirFormularioCadastro = async (req, res) => {
     }
 };
 
+exports.exibirConfig = async (req, res) => {
+    try {
+        res.render('config');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao carregar página.');
+    }
+};
 // Processar cadastro de vaca
 exports.cadastrarVaca = async (req, res) => {
     const { nome, idade, cod_raca, cod_estado } = req.body;
