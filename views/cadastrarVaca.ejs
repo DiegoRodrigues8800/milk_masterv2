@@ -19,49 +19,57 @@
         <a href="/vacas/config">Configurações</a>
         <ul class="submenu">
             <li><a href="/vacas/cadastrar">Cadastrar Vaca</a></li>
-            <li><a href="#subitem2">Cadastrar Raça</a></li>
+            <li><a href="/racas/cadastrar">Cadastrar Raça</a></li>
         </ul>
     </div>
 
     <div class="content">
-        <h1>Cadastrar Vaca</h1>
-        <% if (erros && erros.length> 0) { %>
-            <ul class="erros">
-                <% erros.forEach((erro)=> { %>
-                    <li>
-                        <%= erro.msg %>
-                    </li>
-                    <% }) %>
-            </ul>
+        <h1>Cadastrar Vacas</h1>
+        <% if (mensagemSucesso) { %>
+            <div class="alert alert-success">
+                <%= mensagemSucesso %>
+            </div>
             <% } %>
-                <form action="/vacas/cadastrar" method="POST">
-                    <label for="nome">Nome:</label>
-                    <input type="text" id="nome" name="nome" value="<%= dados.nome ? dados.nome : '' %>" required>
-
-                    <label for="idade">Idade:</label>
-                    <input type="number" id="idade" name="idade" value="<%= dados.idade ? dados.idade : '' %>" required>
-
-                    <label for="raca">Raça:</label>
-                    <select id="raca" name="cod_raca" required>
-                        <option value="">Selecione a raça</option>
-                        <% racas.forEach((raca)=> { %>
-                            <option value="<%= raca.idraca %>" <%=dados.cod_raca==raca.idraca ? 'selected' : '' %>><%=
-                                    raca.nome %>
-                            </option>
+                <% if (erros && erros.length> 0) { %>
+                    <ul class="erros">
+                        <% erros.forEach((erro)=> { %>
+                            <div class="alert alert-danger">
+                                <%=erro.msg %>
+                            </div>
+                            </li>
                             <% }) %>
-                    </select>
-                    <label for="raca">Estado:</label>
-                    <select name="cod_estado" id="cod_estado" required>
-                        <option value="">Selecione o estado do animal</option>
-                        <% estados.forEach((estado)=> { %>
-                            <option value="<%= estado.idestado %>" <%=dados.cod_estado==estado.idestado ? 'selected'
-                                : '' %>><%= estado.nome %>
-                            </option>
-                            <% }) %>
-                    </select>
-                    <p></p>
-                    <button type="submit">Cadastrar</button>
-                </form>
+                    </ul>
+                    <% } %>
+                        <form action="/vacas/cadastrar" method="POST">
+                            <label for="nome">Nome:</label>
+                            <input type="text" id="nome" name="nome" value="<%= dados.nome ? dados.nome : '' %>"
+                                required>
+
+                            <label for="idade">Idade:</label>
+                            <input type="number" id="idade" name="idade" value="<%= dados.idade ? dados.idade : '' %>"
+                                required>
+
+                            <label for="raca">Raça:</label>
+                            <select id="raca" name="cod_raca" required>
+                                <option value="">Selecione a raça</option>
+                                <% racas.forEach((raca)=> { %>
+                                    <option value="<%= raca.idraca %>" <%=dados.cod_raca==raca.idraca ? 'selected' : ''
+                                        %>><%= raca.nome %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                            <label for="raca">Estado:</label>
+                            <select name="cod_estado" id="cod_estado" required>
+                                <option value="">Selecione o estado do animal</option>
+                                <% estados.forEach((estado)=> { %>
+                                    <option value="<%= estado.idestado %>" <%=dados.cod_estado==estado.idestado
+                                        ? 'selected' : '' %>><%= estado.nome %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                            <p></p>
+                            <button type="submit" class="btn btn-primary">Cadastrar</button>
+                        </form>
     </div>
 </body>
 

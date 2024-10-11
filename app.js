@@ -1,8 +1,12 @@
+// app.js
+
 // Importando dependências
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const http = require('http'); // Importando http
+const { Server } = require('socket.io');
 
 // Carregar variáveis de ambiente
 dotenv.config();
@@ -28,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const sequelize = require('./config/database');
 const Vaca = require('./models/vaca');
 const Raca = require('./models/raca');
-const Estado = require('./models/estado')
+const Estado = require('./models/estado');
 
 // Definindo associações entre os modelos
 Vaca.belongsTo(Raca, { foreignKey: 'cod_raca' });
@@ -36,6 +40,13 @@ Raca.hasMany(Vaca, { foreignKey: 'cod_raca' });
 
 Vaca.belongsTo(Estado, { foreignKey: 'cod_estado' });
 Estado.hasMany(Vaca, { foreignKey: 'cod_estado' });
+
+// Criando o servidor HTTP e a instância do Socket.IO
+const server = http.createServer(app);
+const io = new Server(server);
+
+// Tornar o objeto `io` disponível nos controladores via `app.locals`
+app.locals.io = io;
 
 // Sincronizando com o banco de dados
 sequelize.authenticate()
@@ -70,13 +81,48 @@ app.get('/api/vacas', async (req, res) => {
     }
 });
 
-
 // Importando e utilizando rotas para vacas
 const vacasRouter = require('./routes/vaca');
 app.use('/vacas', vacasRouter);
 
+// Importando e utilizando rotas para Raças
+const racasRouter = require('./routes/raca');
+app.use('/racas', racasRouter);
+
+// Lidar com o evento de conexão do Socket.IO
+io.on('connection', (socket) => {
+    console.log('Um usuário se conectou');
+
+    // Você pode adicionar mais eventos aqui conforme necessário
+});
+
+// Rota para cadastrar uma vaca
+app.post('/vacas', async (req, res) => {
+    const { nome, cod_raca, cod_estado } = req.body;
+
+    try {
+        const novaVaca = await Vaca.create({ nome, cod_raca, cod_estado });
+
+        // Emitir notificação de sucesso via Socket.IO
+        io.emit('notification', {
+            message: `A vaca ${novaVaca.nome} foi cadastrada com sucesso!`,
+            type: 'success'
+        });
+
+        res.status(201).json(novaVaca);
+    } catch (error) {
+        // Emitir notificação de erro via Socket.IO
+        io.emit('notification', {
+            message: `Erro ao cadastrar a vaca: ${error.message}`,
+            type: 'danger' // Usar 'danger' para erros no Bootstrap
+        });
+
+        res.status(500).json({ error: 'Erro ao cadastrar a vaca.' });
+    }
+});
+
 // Iniciar o servidor
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });

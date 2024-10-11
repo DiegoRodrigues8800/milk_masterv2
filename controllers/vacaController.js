@@ -24,7 +24,7 @@ exports.exibirFormularioCadastro = async (req, res) => {
     try {
         const racas = await Raca.findAll();
         const estados = await Estado.findAll();
-        res.render('cadastrarVaca', { racas, estados, erros: null, dados: {} });
+        res.render('cadastrarVaca', { racas, estados, erros: null, dados: {}, mensagemSucesso: null });
     } catch (error) {
         console.error(error);
         res.status(500).send('Erro ao carregar formulário.');
@@ -39,6 +39,7 @@ exports.exibirConfig = async (req, res) => {
         res.status(500).send('Erro ao carregar página.');
     }
 };
+
 // Processar cadastro de vaca
 exports.cadastrarVaca = async (req, res) => {
     const { nome, idade, cod_raca, cod_estado } = req.body;
@@ -72,14 +73,36 @@ exports.cadastrarVaca = async (req, res) => {
     }
 
     if (erros.length > 0) {
-        const racas = await Raca.findAll();
-        const estados = await Estado.findAll();
-        return res.render('cadastrarVaca', { racas, estados, erros, dados: req.body });
+        try {
+            const racas = await Raca.findAll();
+            const estados = await Estado.findAll();
+            return res.render('cadastrarVaca', {
+                racas, // Passa racas
+                estados, // Passa estados
+                erros,
+                dados: req.body,
+                mensagemSucesso: null
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send('Erro ao carregar dados para o formulário.');
+        }
     }
 
     try {
         await Vaca.create({ nome, idade, cod_raca, cod_estado });
-        res.redirect('/vacas');
+
+        // **Aqui está a correção importante**
+        const racas = await Raca.findAll();
+        const estados = await Estado.findAll();
+
+        return res.render('cadastrarVaca', {
+            racas, // Passa racas
+            estados, // Passa estados
+            erros: null,
+            dados: {},
+            mensagemSucesso: 'Vaca cadastrada com sucesso!'
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send('Erro ao cadastrar vaca.');
