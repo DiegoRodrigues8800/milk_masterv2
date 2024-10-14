@@ -18,7 +18,7 @@ function showNotification(type, message) {
     setTimeout(() => {
         const bsAlert = new bootstrap.Alert(notification);
         bsAlert.close();
-    }, 5000);
+    }, 10000);
 }
 
 // Conectar ao Socket.IO
@@ -32,7 +32,7 @@ socket.on('notification', (data) => {
 
 // Manipulador de envio de formulário via AJAX
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('cadastrarRacaForm');
+    const form = document.getElementById('cadastro');
     if (form) {
         form.addEventListener('submit', async function (event) {
             event.preventDefault(); // Impede o envio padrão do formulário
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(data),
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest' // Indica que é uma requisição AJAX
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
 
@@ -57,14 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     const responseData = await response.json();
 
                     if (responseData.sucesso) {
-                        // O servidor já está emitindo a notificação, então apenas reseta o formulário
+                        // A notificação será disparada pelo Socket.IO no backend, então apenas reseta o formulário
                         this.reset();
                     } else {
-                        // As notificações de erro são emitidas pelo servidor via Socket.IO
+                        // A notificação de erro já é tratada pelo servidor via Socket.IO
                     }
                 } else {
-                    // Se não for JSON, recarrega a página (fallback)
-                    window.location.reload();
+                    window.location.reload(); // Recarregar a página se não for JSON
                 }
             } catch (error) {
                 console.error('Erro ao enviar o formulário:', error);

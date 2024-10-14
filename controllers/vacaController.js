@@ -2,7 +2,7 @@
 const Vaca = require('../models/vaca');
 const Raca = require('../models/raca');
 const Estado = require('../models/estado');
-const { validationResult } = require('express-validator');
+const { validationResult, body } = require('express-validator');
 
 // Exibir lista de vacas
 exports.listarVacas = async (req, res) => {
@@ -31,6 +31,7 @@ exports.exibirFormularioCadastro = async (req, res) => {
     }
 };
 
+// Exibir página de configuração
 exports.exibirConfig = async (req, res) => {
     try {
         res.render('config');
@@ -40,83 +41,133 @@ exports.exibirConfig = async (req, res) => {
     }
 };
 
-// Processar cadastro de vaca
-exports.cadastrarVaca = async (req, res) => {
-    const { nome, idade, cod_raca, cod_estado } = req.body;
+// Processar cadastro de vaca com notificações
+exports.cadastrarVaca = [
+    // Middlewares de validação
+    body('nome').notEmpty().withMessage('Nome é obrigatório.').trim(),
+    body('idade').isInt({ min: 0 }).withMessage('Idade deve ser um número válido.'),
+    body('cod_raca').isInt({ min: 1 }).withMessage('Raça é obrigatória.'),
+    body('cod_estado').isInt({ min: 1 }).withMessage('Estado é obrigatório.'),
+    
+    // Função de processamento
+    async (req, res) => {
+        const erros = validationResult(req);
+        const { nome, idade, cod_raca, cod_estado } = req.body;
+        const io = req.app.locals.io; // Acessa o objeto io para notificações
 
-    // Validação básica
-    let erros = [];
-    if (!nome || nome.trim() === '') {
-        erros.push({ msg: 'Nome é obrigatório.' });
-    }
-    if (!idade || isNaN(idade)) {
-        erros.push({ msg: 'Idade deve ser um número válido.' });
-    }
-    if (!cod_raca || isNaN(cod_raca)) {
-        erros.push({ msg: 'Raça é obrigatória.' });
-    } else {
-        // Verifique se a raça existe
-        const racaExistente = await Raca.findByPk(cod_raca);
-        if (!racaExistente) {
-            erros.push({ msg: 'Raça selecionada não existe.' });
+        if (!erros.isEmpty()) {
+            const errosArray = erros.array();
+
+            // Emitir notificações para cada erro
+            errosArray.forEach(erro => {
+                io.emit('notification', {
+                    message: erro.msg,
+                    type: 'danger'
+                });
+            });
+
+            try {
+                const racas = await Raca.findAll();
+                const estados = await Estado.findAll();
+                return res.render('cadastrarVaca', {
+                    racas,
+                    estados,
+                    erros: errosArray,
+                    dados: req.body,
+                    mensagemSucesso: null
+                });
+            } catch (error) {
+                console.error(error);
+                return res.status(500).send('Erro ao carregar dados para o formulário.');
+            }
         }
-    }
 
-    if (!cod_estado || isNaN(cod_estado)) {
-        erros.push({ msg: 'Estado é obrigatório.' });
-    } else {
-        // Verifique se o estado existe
-        const estadoExistente = await Estado.findByPk(cod_estado);
-        if (!estadoExistente) {
-            erros.push({ msg: 'Estado selecionado não existe.' });
-        }
-    }
-
-    if (erros.length > 0) {
         try {
+            const racaExistente = await Raca.findByPk(cod_raca);
+            if (!racaExistente) {
+                const erro = { msg: 'Raça selecionada não existe.' };
+                io.emit('notification', {
+                    message: erro.msg,
+                    type: 'danger'
+                });
+                const racas = await Raca.findAll();
+                const estados = await Estado.findAll();
+                return res.render('cadastrarVaca', {
+                    racas,
+                    estados,
+                    erros: [erro],
+                    dados: req.body,
+                    mensagemSucesso: null
+                });
+            }
+
+            const estadoExistente = await Estado.findByPk(cod_estado);
+            if (!estadoExistente) {
+                const erro = { msg: 'Estado selecionado não existe.' };
+                io.emit('notification', {
+                    message: erro.msg,
+                    type: 'danger'
+                });
+                const racas = await Raca.findAll();
+                const estados = await Estado.findAll();
+                return res.render('cadastrarVaca', {
+                    racas,
+                    estados,
+                    erros: [erro],
+                    dados: req.body,
+                    mensagemSucesso: null
+                });
+            }
+
+            await Vaca.create({ nome: nome.trim(), idade, cod_raca, cod_estado });
+
+            // Emitir notificação de sucesso
+            io.emit('notification', {
+                message: 'Vaca cadastrada com sucesso!',
+                type: 'success'
+            });
+
             const racas = await Raca.findAll();
             const estados = await Estado.findAll();
-            return res.render('cadastrarVaca', {
-                racas, // Passa racas
-                estados, // Passa estados
-                erros,
-                dados: req.body,
-                mensagemSucesso: null
-            });
         } catch (error) {
             console.error(error);
-            return res.status(500).send('Erro ao carregar dados para o formulário.');
+            io.emit('notification', {
+                message: 'Erro ao cadastrar vaca: ' + error.message,
+                type: 'danger'
+            });
+            return res.status(500).send('Erro ao cadastrar vaca.');
         }
     }
+];
+
+// Excluir vaca com notificações
+exports.excluirVaca = async (req, res) => {
+    const { idvaca } = req.params;
+    const io = req.app.locals.io; // Acessa o objeto io para notificações
 
     try {
-        await Vaca.create({ nome, idade, cod_raca, cod_estado });
+        const vaca = await Vaca.findByPk(idvaca);
+        if (!vaca) {
+            io.emit('notification', {
+                message: 'Vaca não encontrada.',
+                type: 'danger'
+            });
+            return res.status(404).send('Vaca não encontrada.');
+        }
 
-        // **Aqui está a correção importante**
-        const racas = await Raca.findAll();
-        const estados = await Estado.findAll();
+        await Vaca.destroy({ where: { idvaca } });
 
-        return res.render('cadastrarVaca', {
-            racas, // Passa racas
-            estados, // Passa estados
-            erros: null,
-            dados: {},
-            mensagemSucesso: 'Vaca cadastrada com sucesso!'
+        // Emitir notificação de sucesso na exclusão
+        io.emit('notification', {
+            message: 'Vaca excluída com sucesso!',
+            type: 'success'
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Erro ao cadastrar vaca.');
-    }
-};
-
-// Excluir vaca
-exports.excluirVaca = async (req, res) => {
-    const { idvaca } = req.params;
-    try {
-        await Vaca.destroy({ where: { idvaca } });
-        res.redirect('/vacas');
-    } catch (error) {
-        console.error(error);
+        io.emit('notification', {
+            message: 'Erro ao excluir vaca: ' + error.message,
+            type: 'danger'
+        });
         res.status(500).send('Erro ao excluir vaca.');
     }
 };

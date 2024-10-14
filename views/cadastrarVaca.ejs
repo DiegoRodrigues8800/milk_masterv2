@@ -25,22 +25,7 @@
 
     <div class="content">
         <h1>Cadastrar Vacas</h1>
-        <% if (mensagemSucesso) { %>
-            <div class="alert alert-success">
-                <%= mensagemSucesso %>
-            </div>
-            <% } %>
-                <% if (erros && erros.length> 0) { %>
-                    <ul class="erros">
-                        <% erros.forEach((erro)=> { %>
-                            <div class="alert alert-danger">
-                                <%=erro.msg %>
-                            </div>
-                            </li>
-                            <% }) %>
-                    </ul>
-                    <% } %>
-                        <form action="/vacas/cadastrar" method="POST">
+                        <form id="cadastro" action="/vacas/cadastrar" method="POST">
                             <label for="nome">Nome:</label>
                             <input type="text" id="nome" name="nome" value="<%= dados.nome ? dados.nome : '' %>"
                                 required>
@@ -71,6 +56,13 @@
                             <button type="submit" class="btn btn-primary">Cadastrar</button>
                         </form>
     </div>
+        <!-- Div para notificações -->
+        <div id="notificationContainer" class="position-fixed" style="z-index: 1050;"></div>
+
+        <!-- Incluindo Socket.IO client-side -->
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/notification.js"></script>
 </body>
 
 </html>
