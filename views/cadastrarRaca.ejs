@@ -1,0 +1,47 @@
+<!-- views/cadastrarRaca.ejs -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Raça</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="sidebar">
+        <a href="/">Início</a>
+        <a href="/vacas">Vacas</a>
+        <a href="#">Raças</a>
+        <a href="#">Produção</a>
+        <a href="#">Financeiro</a>
+        <a href="/vacas/config">Configurações</a>
+        <ul class="submenu">
+            <li><a href="/vacas/cadastrar">Cadastrar Vaca</a></li>
+            <li><a href="/racas/cadastrar">Cadastrar Raça</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1>Cadastrar Raças</h1>
+        <form id="cadastro" action="/racas/cadastrar" method="POST" class="mt-4">
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome:</label>
+                <input type="text" id="nome" name="nome" class="form-control"
+                    value="<%= dados.nome ? dados.nome : '' %>" required>
+                <div id="nomeHelp" class="form-text">Digite o nome da raça.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </form>
+    </div>
+
+    <!-- Div para notificações -->
+    <div id="notificationContainer" class="position-fixed" style="z-index: 1050;"></div>
+
+    <!-- Incluindo Socket.IO client-side -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/notification.js"></script>
+</body>
+
+</html>
