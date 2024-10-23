@@ -7,6 +7,10 @@ body {
   height: 100vh;
 }
 
+.alert-info{
+  text-align: center;
+}
+
 h1 {
   color: #333;
   margin: 20px;
@@ -139,4 +143,14 @@ th {
 #notificationContainer.hide {
   transform: translateY(100%); /* Empurra a notificação para fora da tela */
   opacity: 0;
+}
+/* Estilização opcional dos valores */
+#contagemValores span {
+  font-weight: bold; /* Negrito para os valores */
+  color: #007bff; /* Cor azul */
+  font-size: 20px; /* Tamanho da fonte dos valores */
+}
+
+.my-4{
+  text-align: center;
 }

@@ -19,4 +19,6 @@ router.post('/excluir/:idvaca', VacaController.excluirVaca);
 // Rota para tela de configuração do sistema
 router.get('/config', VacaController.exibirConfig);
 
+router.get('/contagem', VacaController.contarVacasPorEstado);
+
 module.exports = router;

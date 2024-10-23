@@ -7,6 +7,7 @@
     <title>
         <%= titulo %>
     </title>
+    <link rel="icon" type="image/x-icon" href="/favicon_io/favicon.ico">
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -22,15 +23,59 @@
     </div>
 
     <div class="content">
-        <h1 class="mb-4">Página Principal</h1>
+        <h1 class="mb-4">Milk Master</h1>
         <div class="alert alert-info" role="alert">
             Bem-vindo ao <strong>
                 <%= titulo %>
             </strong>! Use a barra lateral para navegar pelas funcionalidades.
         </div>
+        <div class="container my-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Contagem de Vacas</h5>
+                    <p class="card-text" id="contagemValores">
+                        Seca: <span id="contagemSeca">0</span>
+                        Lactação: <span id="contagemLactacao">0</span>
+                        Novilha: <span id="contagemNovilha">0</span>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
+    <script>
+        fetch('/vacas/contagem')
+            .then(response => {
+                if (!response.ok) { // Verifique se a resposta não é ok
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Inicializar variáveis de contagem
+                let contagemSeca = 0;
+                let contagemLactacao = 0;
+                let contagemNovilha = 0;
 
+                // Iterar sobre os resultados e preencher as contagens
+                data.forEach(item => {
+                    if (item.cod_estado === 1) { // Suponha que 1 seja Seca
+                        contagemSeca = item.total;
+                    } else if (item.cod_estado === 2) { // Suponha que 2 seja Lactação
+                        contagemLactacao = item.total;
+                    } else if (item.cod_estado === 3) { // Suponha que 3 seja Novilha
+                        contagemNovilha = item.total;
+                    }
+                });
+
+                // Atualizar o HTML com as contagens
+                document.getElementById('contagemSeca').textContent = contagemSeca;
+                document.getElementById('contagemLactacao').textContent = contagemLactacao;
+                document.getElementById('contagemNovilha').textContent = contagemNovilha;
+            })
+            .catch(error => console.error('Erro ao carregar contagem de vacas:', error));
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 
 

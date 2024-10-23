@@ -1,6 +1,7 @@
 // controllers/VacaController.js
 const Vaca = require('../models/vaca');
 const Raca = require('../models/raca');
+const { Sequelize } = require('sequelize');
 const Estado = require('../models/estado');
 const { validationResult, body } = require('express-validator');
 
@@ -31,6 +32,28 @@ exports.exibirFormularioCadastro = async (req, res) => {
     }
 };
 
+exports.contarVacasPorEstado = async (req, res) => {
+    try {
+        console.log("Método contarVacasPorEstado foi chamado");
+
+        const contagem = await Vaca.findAll({
+            attributes: [
+                'cod_estado',
+                [Sequelize.fn('COUNT', Sequelize.col('idvaca')), 'total']
+            ],
+            group: ['cod_estado']
+        });
+
+        console.log("Contagem de vacas por estado:", contagem);
+        res.json(contagem); // Retorna a contagem como JSON
+    } catch (err) {
+        console.error("Erro ao contar vacas por estado:", err.message); // Loga apenas a mensagem do erro
+        console.error(err); // Loga o objeto de erro completo
+        res.status(500).json({ error: 'Erro ao contar vacas por estado' });
+    }
+};
+
+
 // Exibir página de configuração
 exports.exibirConfig = async (req, res) => {
     try {
@@ -48,7 +71,7 @@ exports.cadastrarVaca = [
     body('idade').isInt({ min: 0 }).withMessage('Idade deve ser um número válido.'),
     body('cod_raca').isInt({ min: 1 }).withMessage('Raça é obrigatória.'),
     body('cod_estado').isInt({ min: 1 }).withMessage('Estado é obrigatório.'),
-    
+
     // Função de processamento
     async (req, res) => {
         const erros = validationResult(req);

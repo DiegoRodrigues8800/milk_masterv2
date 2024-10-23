@@ -7,6 +7,7 @@
     <title>Cadastrar Vaca</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon_io/favicon.ico">
 </head>
 
 <body>
@@ -25,44 +26,42 @@
 
     <div class="content">
         <h1>Cadastrar Vacas</h1>
-                        <form id="cadastro" action="/vacas/cadastrar" method="POST">
-                            <label for="nome">Nome:</label>
-                            <input type="text" id="nome" name="nome" value="<%= dados.nome ? dados.nome : '' %>"
-                                required>
+        <form id="cadastro" action="/vacas/cadastrar" method="POST">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" value="<%= dados.nome ? dados.nome : '' %>" required>
 
-                            <label for="idade">Idade:</label>
-                            <input type="number" id="idade" name="idade" value="<%= dados.idade ? dados.idade : '' %>"
-                                required>
+            <label for="idade">Idade:</label>
+            <input type="number" id="idade" name="idade" value="<%= dados.idade ? dados.idade : '' %>" required>
 
-                            <label for="raca">Raça:</label>
-                            <select id="raca" name="cod_raca" required>
-                                <option value="">Selecione a raça</option>
-                                <% racas.forEach((raca)=> { %>
-                                    <option value="<%= raca.idraca %>" <%=dados.cod_raca==raca.idraca ? 'selected' : ''
-                                        %>><%= raca.nome %>
-                                    </option>
-                                    <% }) %>
-                            </select>
-                            <label for="raca">Estado:</label>
-                            <select name="cod_estado" id="cod_estado" required>
-                                <option value="">Selecione o estado do animal</option>
-                                <% estados.forEach((estado)=> { %>
-                                    <option value="<%= estado.idestado %>" <%=dados.cod_estado==estado.idestado
-                                        ? 'selected' : '' %>><%= estado.nome %>
-                                    </option>
-                                    <% }) %>
-                            </select>
-                            <p></p>
-                            <button type="submit" class="btn btn-primary">Cadastrar</button>
-                        </form>
+            <label for="raca">Raça:</label>
+            <select id="raca" name="cod_raca" required>
+                <option value="">Selecione a raça</option>
+                <% racas.forEach((raca)=> { %>
+                    <option value="<%= raca.idraca %>" <%=dados.cod_raca==raca.idraca ? 'selected' : '' %>><%= raca.nome
+                            %>
+                    </option>
+                    <% }) %>
+            </select>
+            <label for="raca">Estado:</label>
+            <select name="cod_estado" id="cod_estado" required>
+                <option value="">Selecione o estado do animal</option>
+                <% estados.forEach((estado)=> { %>
+                    <option value="<%= estado.idestado %>" <%=dados.cod_estado==estado.idestado ? 'selected' : '' %>><%=
+                            estado.nome %>
+                    </option>
+                    <% }) %>
+            </select>
+            <p></p>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </form>
     </div>
-        <!-- Div para notificações -->
-        <div id="notificationContainer" class="position-fixed" style="z-index: 1050;"></div>
+    <!-- Div para notificações -->
+    <div id="notificationContainer" class="position-fixed" style="z-index: 1050;"></div>
 
-        <!-- Incluindo Socket.IO client-side -->
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="/js/notification.js"></script>
+    <!-- Incluindo Socket.IO client-side -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/notification.js"></script>
 </body>
 
 </html>
