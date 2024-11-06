@@ -89,6 +89,11 @@ app.use('/vacas', vacasRouter);
 const racasRouter = require('./routes/raca');
 app.use('/racas', racasRouter);
 
+// Importando e utilizando rotas para financeiro
+const financeiroRouter = require('./routes/financeiro');
+app.use('/financeiro', financeiroRouter);
+
+
 // Lidar com o evento de conexão do Socket.IO
 io.on('connection', (socket) => {
     console.log('Um usuário se conectou');

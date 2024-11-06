@@ -11,12 +11,12 @@
 </head>
 
 <body>
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
+        <button class="toggle-btn" onclick="toggleSidebar()">&#9776;</button>
         <a href="/">Início</a>
         <a href="/vacas">Vacas</a>
-        <a href="#">Raças</a>
         <a href="#">Produção</a>
-        <a href="#">Financeiro</a>
+        <a href="/financeiro">Financeiro</a>
         <a href="/vacas/config">Configurações</a>
         <ul class="submenu">
             <li><a href="/vacas/cadastrar">Cadastrar Vaca</a></li>
@@ -43,6 +43,23 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/notification.js"></script>
+    <script>
+        // Função para alternar a visibilidade da sidebar
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const content = document.querySelector('.content');
+
+            // Alterna a classe 'collapsed' na sidebar
+            sidebar.classList.toggle('collapsed');
+
+            // Ajusta a margem do conteúdo quando a sidebar for recolhida ou expandida
+            if (sidebar.classList.contains('collapsed')) {
+                content.style.marginLeft = '80px'; // Quando a sidebar estiver recolhida
+            } else {
+                content.style.marginLeft = '250px'; // Quando a sidebar estiver expandida
+            }
+        }
+    </script>
 </body>
 
 </html>

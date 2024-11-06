@@ -1,82 +1,200 @@
-<!-- views/index.ejs -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <title>
-        <%= titulo %>
+        Milk Master
     </title>
     <link rel="icon" type="image/x-icon" href="/favicon_io/favicon.ico">
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    <div class="sidebar">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <button class="toggle-btn" onclick="toggleSidebar()">&#9776;</button>
         <a href="/">Início</a>
         <a href="/vacas">Vacas</a>
-        <a href="#">Raças</a>
         <a href="#">Produção</a>
-        <a href="#">Financeiro</a>
+        <a href="/financeiro">Financeiro</a>
         <a href="/vacas/config">Configurações</a>
     </div>
 
+    <!-- Main Content -->
     <div class="content">
         <h1 class="mb-4">Milk Master</h1>
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-info" role="alert" style="text-align: center;">
             Bem-vindo ao <strong>
                 <%= titulo %>
-            </strong>! Use a barra lateral para navegar pelas funcionalidades.
+            </strong>! Use a barra lateral para navegar.
         </div>
+
+        <!-- Dashboard Cards -->
         <div class="container my-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Contagem de Vacas</h5>
-                    <p class="card-text" id="contagemValores">
-                        Seca: <span id="contagemSeca">0</span>
-                        Lactação: <span id="contagemLactacao">0</span>
-                        Novilha: <span id="contagemNovilha">0</span>
-                    </p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Litros Produzidos</h5>
+                            <p class="card-text display-4" id="litrosProduzidos">6,951</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Ração Gasta (kg)</h5>
+                            <p class="card-text display-4" id="racaoGasta">2,444</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Vacas em Lactação</h5>
+                            <p class="card-text display-4" id="vacasLactacao">10</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Produção por Vaca -->
+        <div class="container mt-5">
+            <h2 class="mb-4 text-center">Produção de Leite por Vaca</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nome da Vaca</th>
+                        <th>Produção (litros)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Vermelha</td>
+                        <td>800</td>
+                    </tr>
+                    <tr>
+                        <td>Baixinha</td>
+                        <td>750</td>
+                    </tr>
+                    <tr>
+                        <td>Faísca</td>
+                        <td>750</td>
+                    </tr>
+                    <tr>
+                        <td>Preta</td>
+                        <td>700</td>
+                    </tr>
+                    <tr>
+                        <td>Branquinha</td>
+                        <td>700</td>
+                    </tr>
+                    <tr>
+                        <td>Laranja</td>
+                        <td>600</td>
+                    </tr>
+                    <tr>
+                        <td>Bequinha</td>
+                        <td>500</td>
+                    </tr>
+                    <tr>
+                        <td>Feinha</td>
+                        <td>500</td>
+                    </tr>
+                    <tr>
+                        <td>Saracura</td>
+                        <td>450</td>
+                    </tr>
+                    <tr>
+                        <td>Boneca</td>
+                        <td>450</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="container mt-5">
+            <h2 class="text-center mb-4">Análise Gráfica</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="text-center">Produção de Leite ao Longo do Mês</h5>
+                    <canvas id="graficoLeite"></canvas>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-center">Consumo de Ração ao Longo do Mês</h5>
+                    <canvas id="graficoRacao"></canvas>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        fetch('/vacas/contagem')
-            .then(response => {
-                if (!response.ok) { // Verifique se a resposta não é ok
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Inicializar variáveis de contagem
-                let contagemSeca = 0;
-                let contagemLactacao = 0;
-                let contagemNovilha = 0;
 
-                // Iterar sobre os resultados e preencher as contagens
-                data.forEach(item => {
-                    if (item.cod_estado === 1) { // Suponha que 1 seja Seca
-                        contagemSeca = item.total;
-                    } else if (item.cod_estado === 2) { // Suponha que 2 seja Lactação
-                        contagemLactacao = item.total;
-                    } else if (item.cod_estado === 3) { // Suponha que 3 seja Novilha
-                        contagemNovilha = item.total;
-                    }
-                });
-
-                // Atualizar o HTML com as contagens
-                document.getElementById('contagemSeca').textContent = contagemSeca;
-                document.getElementById('contagemLactacao').textContent = contagemLactacao;
-                document.getElementById('contagemNovilha').textContent = contagemNovilha;
-            })
-            .catch(error => console.error('Erro ao carregar contagem de vacas:', error));
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</body>
+    <script>
+        // Função para alternar a visibilidade da sidebar
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const content = document.querySelector('.content');
 
+            // Alterna a classe 'collapsed' na sidebar
+            sidebar.classList.toggle('collapsed');
+
+            // Ajusta a margem do conteúdo quando a sidebar for recolhida ou expandida
+            if (sidebar.classList.contains('collapsed')) {
+                content.style.marginLeft = '80px'; // Quando a sidebar estiver recolhida
+            } else {
+                content.style.marginLeft = '250px'; // Quando a sidebar estiver expandida
+            }
+        }
+
+        // Gráficos com Chart.js
+        const ctxLeite = document.getElementById('graficoLeite').getContext('2d');
+        new Chart(ctxLeite, {
+            type: 'line',
+            data: {
+                labels: ['01', '05', '10', '15', '20', '25', '30'],
+                datasets: [{
+                    label: 'Litros Produzidos',
+                    data: [900, 1200, 1000, 950, 1100, 1300, 1400],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: true
+                }]
+            },
+            options: {
+                scales: {
+                    x: { title: { display: true, text: 'Dia do Mês' } },
+                    y: { title: { display: true, text: 'Litros' } }
+                }
+            }
+        });
+
+        const ctxRacao = document.getElementById('graficoRacao').getContext('2d');
+        new Chart(ctxRacao, {
+            type: 'bar',
+            data: {
+                labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+                datasets: [{
+                    label: 'Ração Consumida (kg)',
+                    data: [600, 550, 620, 674],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: { title: { display: true, text: 'Semanas' } },
+                    y: { title: { display: true, text: 'Kg de Ração' } }
+                }
+            }
+        });
+    </script>
+</body>
 
 </html>

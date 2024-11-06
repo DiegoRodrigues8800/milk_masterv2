@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Financeiro Milk Master</title>
+    <link rel="icon" type="image/x-icon" href="/favicon_io/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Mover o Chart.js para cima -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+
+<body>
+    <div class="sidebar" id="sidebar">
+        <button class="toggle-btn" onclick="toggleSidebar()">&#9776;</button>
+        <a href="/">Início</a>
+        <a href="/vacas">Vacas</a>
+        <a href="#">Produção</a>
+        <a href="/financeiro">Financeiro</a>
+        <a href="/vacas/config">Configurações</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <h1 class="mb-4">Financeiro</h1>
+        <div class="alert alert-info" role="alert" style="text-align: center;">
+            Bem-vindo ao módulo de <strong>Financeiro</strong>! Aqui você pode acompanhar as finanças da propriedade.
+        </div>
+
+        <!-- Painel de Resumo Financeiro -->
+        <div class="container mt-5">
+            <h2 class="text-center mb-4">Resumo Financeiro</h2>
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Receita Total (R$)</h5>
+                            <p class="card-text display-4" id="receitaTotal">15,000</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Despesa Total (R$)</h5>
+                            <p class="card-text display-4" id="despesaTotal">8,500</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Lucro (R$)</h5>
+                            <p class="card-text display-4" id="lucro">6,500</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos Financeiros -->
+        <div class="container mt-5">
+            <h2 class="text-center mb-4">Análise Gráfica</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="text-center">Receita ao Longo do Mês</h5>
+                    <canvas id="graficoReceita"></canvas>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-center">Despesa ao Longo do Mês</h5>
+                    <canvas id="graficoDespesa"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Resumo Financeiro (Mockup de dados)
+        document.getElementById('receitaTotal').textContent = "15,000";
+        document.getElementById('despesaTotal').textContent = "8,500";
+        document.getElementById('lucro').textContent = "6,500";
+
+        // Gráfico de Receita
+        const ctxReceita = document.getElementById('graficoReceita').getContext('2d');
+        const graficoReceita = new Chart(ctxReceita, {
+            type: 'line',
+            data: {
+                labels: ['01', '05', '10', '15', '20', '25', '30'],
+                datasets: [{
+                    label: 'Receita (R$)',
+                    data: [2000, 3000, 2500, 2800, 3200, 3500, 4000],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    fill: true
+                }]
+            },
+            options: {
+                scales: {
+                    x: { title: { display: true, text: 'Dia do Mês' } },
+                    y: { title: { display: true, text: 'Receita (R$)' } }
+                }
+            }
+        });
+
+        // Gráfico de Despesa
+        const ctxDespesa = document.getElementById('graficoDespesa').getContext('2d');
+        const graficoDespesa = new Chart(ctxDespesa, {
+            type: 'bar',
+            data: {
+                labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+                datasets: [{
+                    label: 'Despesa (R$)',
+                    data: [1500, 2000, 1800, 2200],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: { title: { display: true, text: 'Semanas' } },
+                    y: { title: { display: true, text: 'Despesa (R$)' } }
+                }
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Função para alternar a visibilidade da sidebar
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const content = document.querySelector('.content');
+
+            // Alterna a classe 'collapsed' na sidebar
+            sidebar.classList.toggle('collapsed');
+
+            // Ajusta a margem do conteúdo quando a sidebar for recolhida ou expandida
+            if (sidebar.classList.contains('collapsed')) {
+                content.style.marginLeft = '80px'; // Quando a sidebar estiver recolhida
+            } else {
+                content.style.marginLeft = '250px'; // Quando a sidebar estiver expandida
+            }
+        }
+    </script>
+</body>
+
+</html>
