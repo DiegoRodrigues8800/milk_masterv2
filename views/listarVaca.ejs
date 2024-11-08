@@ -15,7 +15,7 @@
         <button class="toggle-btn" onclick="toggleSidebar()">&#9776;</button>
         <a href="/">Início</a>
         <a href="/vacas">Vacas</a>
-        <a href="#">Produção</a>
+        <a href="/producao">Produção</a>
         <a href="/financeiro">Financeiro</a>
         <a href="/vacas/config">Configurações</a>
     </div>
@@ -23,7 +23,7 @@
     <div class="content">
         <h1 class="mb-4">Lista de Vacas</h1>
         <table class="table table-bordered table-striped">
-            <thead class="table-dark">
+            <thead class="table">
                 <tr>
                     <th>ID</th>
                     <th>Nome</th>
@@ -55,6 +55,7 @@
                             <form action="/vacas/excluir/<%= vaca.idvaca %>" method="POST"
                                 onsubmit="return confirm('Tem certeza que deseja excluir esta vaca?');">
                                 <button type="submit" class="btn btn-danger">Excluir</button>
+                                <button class="btn btn-alert">Editar</button>
                             </form>
                         </td>
                     </tr>

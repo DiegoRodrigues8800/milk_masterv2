@@ -6,6 +6,7 @@ body {
   text-align: center;
   background-color: #f4f4f4;
   display: flex;
+  flex-direction: column; /* Ajuste para centralizar conteúdo */
   height: 100vh;
 }
 
@@ -34,7 +35,7 @@ form {
   background: #fff;
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   max-width: 1200px;
   margin: 20px auto;
 }
@@ -78,7 +79,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
@@ -100,6 +101,7 @@ th {
   padding: 0;
   box-sizing: border-box;
 }
+
 /* Estilos para a notificação */
 #notificationContainer {
   bottom: 0px !important;
@@ -121,9 +123,9 @@ th {
 
 /* Estilizando os números */
 #contagemValores span {
-  font-weight: bold; /* Negrito para os valores */
-  color: #007bff; /* Cor azul */
-  font-size: 20px; /* Tamanho da fonte dos valores */
+  font-weight: bold;
+  color: #007bff;
+  font-size: 20px;
 }
 
 /* Estilos do card */
@@ -146,19 +148,19 @@ th {
 }
 
 #receitaTotal {
-  color: #28a745; /* Verde para receita */
+  color: #28a745;
 }
 
 #despesaTotal {
-  color: #dc3545; /* Vermelho para despesa */
+  color: #dc3545;
 }
 
 #lucro {
-  color: #007bff; /* Azul para lucro */
+  color: #007bff;
 }
 
 .card-body:hover .card-text {
-  color: #007bff; /* Mudar para azul quando passar o mouse */
+  color: #007bff;
 }
 
 /* Canvas (gráficos) */
@@ -166,6 +168,7 @@ canvas {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 /* Estilos globais */
 html, body {
   height: 100%;
@@ -175,63 +178,50 @@ html, body {
   flex-direction: column;
 }
 
-body {
-  display: flex;
-  flex-grow: 1;
-  flex-direction: row;
-  min-height: 100vh; /* Garante que a altura mínima da página seja 100% da tela */
-}
-
 /* Estilos da sidebar */
 .sidebar {
   width: 250px;
   background-color: #343a40;
   color: #fff;
-  height: 100vh; /* Sidebar ocupa a altura inteira da tela */
+  height: 100vh;
   padding-top: 20px;
   position: fixed;
   transition: width 0.3s ease;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 5; /* Garante que a sidebar fique acima do conteúdo */
+  z-index: 5;
 }
 
-/* Quando a sidebar é recolhida, o conteúdo é ajustado */
 .sidebar.collapsed + .content {
-  margin-left: 60px; /* Ajuste para a sidebar recolhida */
+  margin-left: 60px;
 }
 
-/* Ajuste para o botão de alternância */
 .toggle-btn {
   font-size: 24px;
   background: none;
   border: none;
   color: white;
   position: absolute;
-  top: 20px; /* Coloca o botão mais para o topo */
-  left: 198px; /* Ajusta o botão para fora da sidebar quando não colapsada */
+  top: 20px;
+  left: 198px;
   cursor: pointer;
-  z-index: 10; /* Garantir que o botão esteja acima da sidebar */
-  transition: left 0.3s ease; /* Transição suave quando a sidebar for recolhida */
+  z-index: 10;
+  transition: left 0.3s ease;
 }
 
-/* Quando a sidebar é recolhida, reposiciona o botão */
 .sidebar.collapsed .toggle-btn {
-  left: 10px; /* Move o botão para a esquerda quando a sidebar estiver recolhida */
-  z-index: 15; /* Garante que o botão fique visível acima de todos os elementos */
+  left: 10px;
+  z-index: 15;
 }
 
-/* Sidebar recolhida (estado inicial) */
 .sidebar.collapsed {
-  width: 80px; /* Menor largura quando recolhida */
+  width: 80px;
 }
 
-/* Esconde os links e a logo quando a sidebar está recolhida */
 .sidebar.collapsed a,
 .sidebar.collapsed .logo {
-  display: none; 
+  display: none;
 }
 
-/* Estilos de links da sidebar */
 .sidebar a {
   display: block;
   color: #ddd;
@@ -257,16 +247,16 @@ body {
 .content {
   flex-grow: 1;
   padding: 20px;
-  margin-left: 250px; /* Espaço para a sidebar */
-  height: 100vh; /* Garante que o conteúdo ocupe a altura da tela */
-  overflow-y: auto; /* Permite rolagem quando o conteúdo excede a altura */
+  margin-left: 250px;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
   .sidebar {
-    width: 200px; /* Sidebar menor em dispositivos móveis */
-    position: relative; /* Sidebar se torna relativa em telas menores */
+    width: 200px;
+    position: relative;
   }
 
   .sidebar a {
@@ -274,32 +264,37 @@ body {
   }
 
   .content {
-    margin-left: 0; /* Remove a margem esquerda na tela pequena */
+    margin-left: 0;
   }
 
   .alert {
-    width: 50%; /* Ajuste o tamanho conforme necessário */
-    margin: 0 auto; /* Centraliza horizontalmente */
-    text-align: center; /* Centraliza o conteúdo dentro da caixa */
+    width: 50%;
+    margin: 0 auto;
+    text-align: center;
   }
-  
 
   .toggle-btn {
-    top: 15px; /* Ajusta a posição do botão em telas pequenas */
-    left: 10px; /* Mantém o botão visível em telas pequenas */
+    top: 15px;
+    left: 10px;
   }
 }
-/* Mudança de cor quando o mouse passar por cima */
+
 .toggle-btn:hover {
-  background-color: #555; /* Cor de fundo quando o mouse estiver sobre o botão */
+  background-color: #555;
   border-radius: 5px;
 }
-/* Quando a sidebar é recolhida, esconde os itens da lista */
+
+/* Sidebar recolhida */
 .sidebar.collapsed ul {
-  display: none; /* Esconde a lista completamente */
+  display: none;
 }
 
-/* Se você deseja apenas esconder os pontos e não os itens da lista, use: */
 .sidebar.collapsed ul li {
-  list-style-type: none; /* Remove os pontos da lista */
+  list-style-type: none;
+}
+.fixed-bottom-right {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000; /* Garante que o botão fique sobre os outros elementos */
 }
